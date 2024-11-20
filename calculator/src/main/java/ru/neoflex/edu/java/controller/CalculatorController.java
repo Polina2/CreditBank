@@ -12,13 +12,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/calculator")
-public class CalculatorController {
+public class CalculatorController implements CalculatorApi {
     @PostMapping("/offers")
+    @Override
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto loanStatementRequestDto) {
         return null;
     }
 
     @PostMapping("/calc")
+    @Override
     public CreditDto calculateCredit(ScoringDataDto scoringDataDto) {
         return null;
     }
