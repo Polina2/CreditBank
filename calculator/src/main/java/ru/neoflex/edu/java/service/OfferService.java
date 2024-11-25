@@ -1,20 +1,61 @@
 package ru.neoflex.edu.java.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OfferService {
+    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+    @Value(value = "${app.baseRate:21}")
+    private BigDecimal baseRate;
+    @Value(value = "${app.insurancePayment:100000}")
+    private BigDecimal insurancePayment;
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto request) {
-        return null;
+        UUID statementId = UUID.randomUUID();
+        return List.of(
+                getOffer(false, false, request, statementId),
+                getOffer(false, true, request, statementId),
+                getOffer(true, false, request, statementId),
+                getOffer(true, true, request, statementId)
+        );
+    }
+
+    private LoanOfferDto getOffer(
+            boolean isInsuranceEnabled, boolean isSalaryClient, LoanStatementRequestDto request, UUID statementId
+    ) {
+        BigDecimal rate = getResultRate(isInsuranceEnabled, isSalaryClient);
+        BigDecimal monthlyPayment = countMonthlyPayment(request.amount(), rate, request.term());
+        BigDecimal overpayment = countOverpayment(request.amount(), rate, request.term(), monthlyPayment);
+        return new LoanOfferDto(
+                statementId,
+                request.amount(),
+                request.amount().add(overpayment).add(isInsuranceEnabled ? insurancePayment : BigDecimal.ZERO),
+                request.term(),
+                monthlyPayment,
+                rate,
+                isInsuranceEnabled,
+                isSalaryClient
+        );
+    }
+
+    private BigDecimal getResultRate(boolean isInsuranceEnabled, boolean isSalaryClient) {
+        BigDecimal resultRate = baseRate;
+        if (isSalaryClient)
+            resultRate = resultRate.subtract(BigDecimal.ONE);
+        if (isInsuranceEnabled)
+            resultRate = resultRate.subtract(BigDecimal.valueOf(1.5));
+        return resultRate;
     }
 
     private BigDecimal countMonthlyPayment(BigDecimal amount, BigDecimal rate, Integer term) {
-        BigDecimal monthRate = rate.divide(BigDecimal.valueOf(1200));
+        BigDecimal monthRate = rate.divide(BigDecimal.valueOf(1200), 6, ROUNDING_MODE);
         BigDecimal powResult = monthRate.add(BigDecimal.ONE).pow(term);
         BigDecimal result =
                 amount
@@ -22,25 +63,38 @@ public class OfferService {
                         .multiply(powResult)
                         .divide(
                                 powResult
-                                        .subtract(BigDecimal.ONE)
+                                        .subtract(BigDecimal.ONE),
+                                ROUNDING_MODE
                         );
-        return result;
+        return result.setScale(6, ROUNDING_MODE);
     }
 
-    private BigDecimal countOverpayment(BigDecimal amount, BigDecimal rate, Integer term, BigDecimal monthlyPayment) {
+    private BigDecimal countOverpayment(BigDecimal amount, BigDecimal ratePercent, Integer term, BigDecimal monthlyPayment) {
         BigDecimal result = BigDecimal.ZERO;
+        BigDecimal rate = ratePercent.divide(BigDecimal.valueOf(1200), 6, ROUNDING_MODE);
         for (int n = 0; n < term; n++) {
             BigDecimal curC = BigDecimal.ONE;
             BigDecimal ratePowForAmount = rate;
             BigDecimal ratePowForMonthlyPayment = BigDecimal.ONE;
             for (int k = 0; k <= n; k++) {
-                result = result.add(curC.multiply(amount.multiply(ratePowForAmount).subtract(monthlyPayment.multiply(ratePowForMonthlyPayment))));
-                curC.multiply(BigDecimal.valueOf(n - k + 1)).divide(BigDecimal.valueOf(k));
+                result = result
+                        .add(
+                                curC
+                                .multiply(
+                                        amount
+                                        .multiply(ratePowForAmount)
+                                        .subtract(
+                                                monthlyPayment
+                                                .multiply(ratePowForMonthlyPayment)
+                                        )
+                                )
+                        );
+                curC = curC.multiply(BigDecimal.valueOf(n - k)).divide(BigDecimal.valueOf(k + 1), 6, ROUNDING_MODE);
                 ratePowForAmount = ratePowForAmount.multiply(rate);
                 ratePowForMonthlyPayment = ratePowForMonthlyPayment.multiply(rate);
             }
         }
-        result = result.add(BigDecimal.valueOf(term));
-        return result;
+        result = result.add(BigDecimal.valueOf(term).multiply(monthlyPayment));
+        return result.setScale(6, ROUNDING_MODE);
     }
 }
