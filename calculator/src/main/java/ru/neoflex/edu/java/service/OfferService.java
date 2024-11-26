@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 public class OfferService {
-    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+    public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
     @Value(value = "${app.baseRate:21}")
     private BigDecimal baseRate;
     @Value(value = "${app.insurancePayment:100000}")
@@ -32,11 +32,12 @@ public class OfferService {
     ) {
         BigDecimal rate = getResultRate(isInsuranceEnabled, isSalaryClient);
         BigDecimal monthlyPayment = countMonthlyPayment(request.amount(), rate, request.term());
-        BigDecimal overpayment = countOverpayment(request.amount(), rate, request.term(), monthlyPayment);
+        BigDecimal totalPayment =
+                getTotalPayment(request.amount(), rate, request.term(), monthlyPayment, isInsuranceEnabled);
         return new LoanOfferDto(
                 statementId,
                 request.amount(),
-                request.amount().add(overpayment).add(isInsuranceEnabled ? insurancePayment : BigDecimal.ZERO),
+                totalPayment,
                 request.term(),
                 monthlyPayment,
                 rate,
@@ -45,7 +46,14 @@ public class OfferService {
         );
     }
 
-    private BigDecimal getResultRate(boolean isInsuranceEnabled, boolean isSalaryClient) {
+    public BigDecimal getTotalPayment(
+            BigDecimal amount, BigDecimal rate, Integer term, BigDecimal monthlyPayment, Boolean isInsuranceEnabled
+    ) {
+        BigDecimal overpayment = countOverpayment(amount, rate, term, monthlyPayment);
+        return amount.add(overpayment).add(isInsuranceEnabled ? insurancePayment : BigDecimal.ZERO);
+    }
+
+    public BigDecimal getResultRate(boolean isInsuranceEnabled, boolean isSalaryClient) {
         BigDecimal resultRate = baseRate;
         if (isSalaryClient)
             resultRate = resultRate.subtract(BigDecimal.ONE);
@@ -54,8 +62,8 @@ public class OfferService {
         return resultRate;
     }
 
-    private BigDecimal countMonthlyPayment(BigDecimal amount, BigDecimal rate, Integer term) {
-        BigDecimal monthRate = rate.divide(BigDecimal.valueOf(1200), 6, ROUNDING_MODE);
+    public BigDecimal countMonthlyPayment(BigDecimal amount, BigDecimal rate, Integer term) {
+        BigDecimal monthRate = countMonthRate(rate);
         BigDecimal powResult = monthRate.add(BigDecimal.ONE).pow(term);
         BigDecimal result =
                 amount
@@ -71,7 +79,7 @@ public class OfferService {
 
     private BigDecimal countOverpayment(BigDecimal amount, BigDecimal ratePercent, Integer term, BigDecimal monthlyPayment) {
         BigDecimal result = BigDecimal.ZERO;
-        BigDecimal rate = ratePercent.divide(BigDecimal.valueOf(1200), 6, ROUNDING_MODE);
+        BigDecimal rate = countMonthRate(ratePercent);
         for (int n = 0; n < term; n++) {
             BigDecimal curC = BigDecimal.ONE;
             BigDecimal ratePowForAmount = rate;
@@ -96,5 +104,9 @@ public class OfferService {
         }
         result = result.add(BigDecimal.valueOf(term).multiply(monthlyPayment));
         return result.setScale(6, ROUNDING_MODE);
+    }
+
+    public BigDecimal countMonthRate(BigDecimal rate) {
+        return rate.divide(BigDecimal.valueOf(1200), 6, ROUNDING_MODE);
     }
 }

@@ -19,5 +19,5 @@ public interface CalculatorApi {
     List<LoanOfferDto> getOffers(@RequestBody @Valid LoanStatementRequestDto loanStatementRequestDto);
 
     @PostMapping("/calc")
-    CreditDto calculateCredit(ScoringDataDto scoringDataDto);
+    CreditDto calculateCredit(@RequestBody @Valid ScoringDataDto scoringDataDto);
 }
