@@ -55,10 +55,12 @@ public class OfferService {
 
     public BigDecimal getResultRate(boolean isInsuranceEnabled, boolean isSalaryClient) {
         BigDecimal resultRate = baseRate;
-        if (isSalaryClient)
+        if (isSalaryClient) {
             resultRate = resultRate.subtract(BigDecimal.ONE);
-        if (isInsuranceEnabled)
+        }
+        if (isInsuranceEnabled) {
             resultRate = resultRate.subtract(BigDecimal.valueOf(1.5));
+        }
         return resultRate;
     }
 
@@ -74,7 +76,7 @@ public class OfferService {
                                         .subtract(BigDecimal.ONE),
                                 ROUNDING_MODE
                         );
-        return result.setScale(6, ROUNDING_MODE);
+        return result.setScale(2, ROUNDING_MODE);
     }
 
     private BigDecimal countOverpayment(BigDecimal amount, BigDecimal ratePercent, Integer term, BigDecimal monthlyPayment) {
@@ -103,10 +105,10 @@ public class OfferService {
             }
         }
         result = result.add(BigDecimal.valueOf(term).multiply(monthlyPayment));
-        return result.setScale(6, ROUNDING_MODE);
+        return result.setScale(2, ROUNDING_MODE);
     }
 
     public BigDecimal countMonthRate(BigDecimal rate) {
-        return rate.divide(BigDecimal.valueOf(1200), 6, ROUNDING_MODE);
+        return rate.divide(BigDecimal.valueOf(1200), 2, ROUNDING_MODE);
     }
 }

@@ -1,7 +1,6 @@
 package ru.neoflex.edu.java.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.neoflex.edu.java.dto.CreditDto;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
@@ -14,7 +13,6 @@ import ru.neoflex.edu.java.service.ScoringService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/calculator")
 @RequiredArgsConstructor
 public class CalculatorController implements CalculatorApi {
 

@@ -82,10 +82,10 @@ public class CreditService {
         BigDecimal totalAmount = offerService.getTotalPayment(amount, rate, term, monthlyPayment, isInsuranceEnabled);
         BigDecimal result =
                 totalAmount
-                .divide(amount, 6, OfferService.ROUNDING_MODE)
+                .divide(amount, 2, OfferService.ROUNDING_MODE)
                 .subtract(BigDecimal.ONE)
                 .multiply(BigDecimal.valueOf(100))
-                .divide(BigDecimal.valueOf(term / 12.0), 6, OfferService.ROUNDING_MODE);
+                .divide(BigDecimal.valueOf(term / 12.0), 2, OfferService.ROUNDING_MODE);
         return result;
     }
 }
