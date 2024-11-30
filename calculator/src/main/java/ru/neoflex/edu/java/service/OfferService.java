@@ -1,5 +1,6 @@
 package ru.neoflex.edu.java.service;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Getter
 public class OfferService {
     public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
     @Value(value = "${app.baseRate:21}")
@@ -30,7 +32,7 @@ public class OfferService {
     private LoanOfferDto getOffer(
             boolean isInsuranceEnabled, boolean isSalaryClient, LoanStatementRequestDto request, UUID statementId
     ) {
-        BigDecimal rate = getResultRate(isInsuranceEnabled, isSalaryClient);
+        BigDecimal rate = getResultRate(isInsuranceEnabled, isSalaryClient, this.baseRate);
         BigDecimal monthlyPayment = countMonthlyPayment(request.amount(), rate, request.term());
         BigDecimal totalPayment =
                 getTotalPayment(request.amount(), rate, request.term(), monthlyPayment, isInsuranceEnabled);
@@ -53,7 +55,7 @@ public class OfferService {
         return amount.add(overpayment).add(isInsuranceEnabled ? insurancePayment : BigDecimal.ZERO);
     }
 
-    public BigDecimal getResultRate(boolean isInsuranceEnabled, boolean isSalaryClient) {
+    public BigDecimal getResultRate(boolean isInsuranceEnabled, boolean isSalaryClient, BigDecimal baseRate) {
         BigDecimal resultRate = baseRate;
         if (isSalaryClient) {
             resultRate = resultRate.subtract(BigDecimal.ONE);

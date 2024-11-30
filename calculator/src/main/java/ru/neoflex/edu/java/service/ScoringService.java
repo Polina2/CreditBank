@@ -36,7 +36,10 @@ public class ScoringService {
 
     public BigDecimal countResultRate(ScoringDataDto scoringData) {
         BigDecimal resultRate =
-                offerService.getResultRate(scoringData.isInsuranceEnabled(), scoringData.isSalaryClient());
+                offerService
+                .getResultRate(
+                        scoringData.isInsuranceEnabled(), scoringData.isSalaryClient(), offerService.getBaseRate()
+                );
         resultRate = resultRateByEmploymentStatus(resultRate, scoringData.employment().employmentStatus());
         resultRate = resultRateByPosition(resultRate, scoringData.employment().position());
         resultRate = resultRateByMaritalStatus(resultRate, scoringData.maritalStatus());
