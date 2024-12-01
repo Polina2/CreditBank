@@ -20,14 +20,13 @@ class OfferServiceTest {
     void getTotalPayment() {
         BigDecimal amount = BigDecimal.valueOf(20000);
         BigDecimal rate = BigDecimal.valueOf(12);
-        Integer term = 36;
-        BigDecimal monthlyPayment = BigDecimal.valueOf(664.29);
+        Integer term = 6;
+        BigDecimal monthlyPayment = BigDecimal.valueOf(3450.97);
         Boolean isInsuranceEnabled = false;
 
-        BigDecimal expected = BigDecimal.valueOf(23914);
+        BigDecimal expected = BigDecimal.valueOf(20705.80).setScale(2);
         BigDecimal actual = offerService
-                .getTotalPayment(amount, rate, term, monthlyPayment, isInsuranceEnabled)
-                .setScale(0, RoundingMode.HALF_UP);
+                .getTotalPayment(amount, rate, term, monthlyPayment, isInsuranceEnabled);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -52,9 +51,9 @@ class OfferServiceTest {
     void countMonthlyPayment() {
         BigDecimal amount = BigDecimal.valueOf(20000);
         BigDecimal rate = BigDecimal.valueOf(12);
-        Integer term = 36;
+        Integer term = 6;
 
-        BigDecimal expected = BigDecimal.valueOf(664.29);
+        BigDecimal expected = BigDecimal.valueOf(3450.97);
         BigDecimal actual = offerService
                 .countMonthlyPayment(amount, rate, term);
 

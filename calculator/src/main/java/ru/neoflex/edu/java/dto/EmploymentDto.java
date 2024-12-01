@@ -18,4 +18,7 @@ public record EmploymentDto(
         @Min(value = 3, message = "Bad current work experience")
         Integer workExperienceCurrent
 ) {
+        public EmploymentDto(EmploymentStatus employmentStatus, Position position) {
+                this(employmentStatus, null, null, position, null, null);
+        }
 }

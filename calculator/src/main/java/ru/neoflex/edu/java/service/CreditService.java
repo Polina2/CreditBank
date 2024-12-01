@@ -7,6 +7,7 @@ import ru.neoflex.edu.java.dto.PaymentScheduleElementDto;
 import ru.neoflex.edu.java.dto.ScoringDataDto;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class CreditService {
         );
     }
 
-    private List<PaymentScheduleElementDto> getPaymentSchedule(
+    protected List<PaymentScheduleElementDto> getPaymentSchedule(
             BigDecimal amount, Integer term, BigDecimal monthlyPayment, BigDecimal rate
     ) {
         List<PaymentScheduleElementDto> schedule = new ArrayList<>();
@@ -58,7 +59,7 @@ public class CreditService {
         for (int number = 1; number <= term; number++) {
             curDate = curDate.plusMonths(1);
             BigDecimal totalPayment = monthlyPayment;
-            BigDecimal interestPayment = curDebt.multiply(monthRate);
+            BigDecimal interestPayment = curDebt.multiply(monthRate).setScale(2, OfferService.ROUNDING_MODE);
             BigDecimal debtPayment = monthlyPayment.subtract(interestPayment);
             if (curDebt.subtract(debtPayment).compareTo(BigDecimal.ZERO) < 0) {
                 debtPayment = curDebt;
@@ -76,13 +77,13 @@ public class CreditService {
         return schedule;
     }
 
-    private BigDecimal getPsk(
+    protected BigDecimal getPsk(
             BigDecimal amount, BigDecimal rate, Integer term, BigDecimal monthlyPayment, Boolean isInsuranceEnabled
     ) {
         BigDecimal totalAmount = offerService.getTotalPayment(amount, rate, term, monthlyPayment, isInsuranceEnabled);
         BigDecimal result =
                 totalAmount
-                .divide(amount, 2, OfferService.ROUNDING_MODE)
+                .divide(amount, 6, OfferService.ROUNDING_MODE)
                 .subtract(BigDecimal.ONE)
                 .multiply(BigDecimal.valueOf(100))
                 .divide(BigDecimal.valueOf(term / 12.0), 2, OfferService.ROUNDING_MODE);
