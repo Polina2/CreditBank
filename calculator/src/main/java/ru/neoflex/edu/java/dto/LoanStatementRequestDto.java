@@ -1,5 +1,6 @@
 package ru.neoflex.edu.java.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -12,9 +13,11 @@ import java.time.LocalDate;
 
 public record LoanStatementRequestDto(
         @NotNull
+        @Schema(description = "Сумма займа")
         @Min(value = 20000, message = "Invalid amount")
         BigDecimal amount,
         @NotNull
+        @Schema(description = "Срок кредита")
         @Min(value = 6, message = "Invalid term")
         Integer term,
         @NotNull
@@ -33,9 +36,11 @@ public record LoanStatementRequestDto(
         @ValidBirthDate(minAge = 18)
         LocalDate birthDate,
         @NotNull
+        @Schema(description = "Серия паспорта")
         @Pattern(regexp = "\\d{4}", message = "Invalid passport series")
         String passportSeries,
         @NotNull
+        @Schema(description = "Номер паспорта")
         @Pattern(regexp = "\\d{6}", message = "Invalid passport number")
         String passportNumber
 ) {

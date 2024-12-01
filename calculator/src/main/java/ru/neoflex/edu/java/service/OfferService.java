@@ -118,6 +118,6 @@ public class OfferService {
     }
 
     public BigDecimal countMonthRate(BigDecimal rate) {
-        return rate.divide(BigDecimal.valueOf(1200), 2, ROUNDING_MODE);
+        return rate.divide(BigDecimal.valueOf(1200), 6, ROUNDING_MODE);
     }
 }
