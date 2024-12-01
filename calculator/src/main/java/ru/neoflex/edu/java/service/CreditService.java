@@ -1,24 +1,27 @@
 package ru.neoflex.edu.java.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.neoflex.edu.java.dto.CreditDto;
 import ru.neoflex.edu.java.dto.PaymentScheduleElementDto;
 import ru.neoflex.edu.java.dto.ScoringDataDto;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CreditService {
     private final ScoringService scoringService;
     private final OfferService offerService;
 
     public CreditDto calculateCredit(ScoringDataDto scoringDataDto) {
+        log.atDebug().log("calculateCredit called at {}", LocalDateTime.now());
         BigDecimal rate = scoringService.countResultRate(scoringDataDto);
         BigDecimal monthlyPayment =
                 offerService.countMonthlyPayment(scoringDataDto.amount(), rate, scoringDataDto.term());

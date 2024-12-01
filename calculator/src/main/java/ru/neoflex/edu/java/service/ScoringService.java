@@ -1,6 +1,7 @@
 package ru.neoflex.edu.java.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.neoflex.edu.java.dto.ScoringDataDto;
 import ru.neoflex.edu.java.dto.enums.EmploymentStatus;
@@ -10,10 +11,12 @@ import ru.neoflex.edu.java.dto.enums.Position;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScoringService {
     private static final BigDecimal MINIMUM_WAGE = BigDecimal.valueOf(13000);
 
@@ -24,6 +27,7 @@ public class ScoringService {
     }
 
     public boolean checkSalary(BigDecimal salary, Integer dependentAmount, BigDecimal amount) {
+        log.atDebug().log("checkSalary called at {}", LocalDateTime.now());
         return
                 salary
                 .subtract(
@@ -35,6 +39,7 @@ public class ScoringService {
     }
 
     public BigDecimal countResultRate(ScoringDataDto scoringData) {
+        log.atDebug().log("countResultRate called at {}", LocalDateTime.now());
         BigDecimal resultRate =
                 offerService
                 .getResultRate(

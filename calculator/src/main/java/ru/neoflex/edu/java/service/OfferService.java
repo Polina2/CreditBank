@@ -1,6 +1,7 @@
 package ru.neoflex.edu.java.service;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
@@ -8,11 +9,13 @@ import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @Getter
+@Slf4j
 public class OfferService {
     public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
     @Value(value = "${app.baseRate:21}")
@@ -20,6 +23,7 @@ public class OfferService {
     @Value(value = "${app.insurancePayment:100000}")
     private BigDecimal insurancePayment;
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto request) {
+        log.atDebug().log("getOffers called at {}", LocalDateTime.now());
         UUID statementId = UUID.randomUUID();
         return List.of(
                 getOffer(false, false, request, statementId),
@@ -51,11 +55,13 @@ public class OfferService {
     public BigDecimal getTotalPayment(
             BigDecimal amount, BigDecimal rate, Integer term, BigDecimal monthlyPayment, Boolean isInsuranceEnabled
     ) {
+        log.atDebug().log("getTotalPayment called at {}", LocalDateTime.now());
         BigDecimal overpayment = countOverpayment(amount, rate, term, monthlyPayment);
         return amount.add(overpayment).add(isInsuranceEnabled ? insurancePayment : BigDecimal.ZERO);
     }
 
     public BigDecimal getResultRate(boolean isInsuranceEnabled, boolean isSalaryClient, BigDecimal baseRate) {
+        log.atDebug().log("getResultRate called at {}", LocalDateTime.now());
         BigDecimal resultRate = baseRate;
         if (isSalaryClient) {
             resultRate = resultRate.subtract(BigDecimal.ONE);
@@ -67,6 +73,7 @@ public class OfferService {
     }
 
     public BigDecimal countMonthlyPayment(BigDecimal amount, BigDecimal rate, Integer term) {
+        log.atDebug().log("countMonthlyPayment called at {}", LocalDateTime.now());
         BigDecimal monthRate = countMonthRate(rate);
         BigDecimal powResult = monthRate.add(BigDecimal.ONE).pow(term);
         BigDecimal result =
