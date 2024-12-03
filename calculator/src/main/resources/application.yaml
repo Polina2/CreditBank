@@ -1,0 +1,15 @@
+calculator:
+  baseRate: 21
+  insurancePayment: 100000
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+
+#logging:
+#  level:
+#    root: INFO
+#    ru.neoflex.edu.java.service: DEBUG
