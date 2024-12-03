@@ -12,7 +12,6 @@ import ru.neoflex.edu.java.service.CreditService;
 import ru.neoflex.edu.java.service.OfferService;
 import ru.neoflex.edu.java.service.ScoringService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,14 +26,21 @@ public class CalculatorController implements CalculatorApi {
 
     @Override
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto loanStatementRequestDto) {
-        log.atInfo().log("/calculator/offers called with {} at {}", loanStatementRequestDto, LocalDateTime.now());
+        log.info("/calculator/offers called with {} at {}", loanStatementRequestDto, LocalDateTime.now());
         return offerService.getOffers(loanStatementRequestDto);
     }
 
     @Override
     public CreditDto calculateCredit(ScoringDataDto scoringDataDto) {
-        log.atInfo().log("/calculator/calc called with {} at {}", scoringDataDto, LocalDateTime.now());
-        if (!scoringService.checkSalary(scoringDataDto.employment().salary(), scoringDataDto.dependentAmount(), scoringDataDto.amount())) {
+        log.info("/calculator/calc called with {} at {}", scoringDataDto, LocalDateTime.now());
+        if (
+                !scoringService
+                        .checkSalary(
+                                scoringDataDto.employment().salary(),
+                                scoringDataDto.dependentAmount(),
+                                scoringDataDto.amount()
+                        )
+        ) {
             throw new CalculatorException("Bad salary");
         }
         return creditService.calculateCredit(scoringDataDto);

@@ -27,7 +27,7 @@ public class ScoringService {
     }
 
     public boolean checkSalary(BigDecimal salary, Integer dependentAmount, BigDecimal amount) {
-        log.atDebug().log("checkSalary called at {}", LocalDateTime.now());
+        log.debug("checkSalary called at {}", LocalDateTime.now());
         return
                 salary
                 .subtract(
@@ -39,7 +39,7 @@ public class ScoringService {
     }
 
     public BigDecimal countResultRate(ScoringDataDto scoringData) {
-        log.atDebug().log("countResultRate called at {}", LocalDateTime.now());
+        log.debug("countResultRate called at {}", LocalDateTime.now());
         BigDecimal resultRate =
                 offerService
                 .getResultRate(
@@ -70,7 +70,7 @@ public class ScoringService {
                 return rate.subtract(BigDecimal.ONE);
             }
             case TOP_MANAGER -> {
-                return rate.subtract(BigDecimal.TWO);
+                return rate.subtract(BigDecimal.valueOf(2));
             }
         }
         return rate;
@@ -79,7 +79,7 @@ public class ScoringService {
     private BigDecimal resultRateByMaritalStatus(BigDecimal rate, MaritalStatus maritalStatus) {
         switch (maritalStatus) {
             case MARRIED -> {
-                return rate.subtract(BigDecimal.TWO);
+                return rate.subtract(BigDecimal.valueOf(2));
             }
             case DIVORCED -> {
                 return rate.add(BigDecimal.ONE);
@@ -94,12 +94,14 @@ public class ScoringService {
     private BigDecimal resultRateByGenderAndAge(BigDecimal rate, Gender gender, Integer age) {
         switch (gender) {
             case FEMALE -> {
-                if (age >= 32 && age <= 60)
-                    return rate.subtract(BigDecimal.TWO);
+                if (age >= 32 && age <= 60) {
+                    return rate.subtract(BigDecimal.valueOf(2));
+                }
             }
             case MALE -> {
-                if (age >= 30 && age <= 55)
-                    return rate.subtract(BigDecimal.TWO);
+                if (age >= 30 && age <= 55) {
+                    return rate.subtract(BigDecimal.valueOf(2));
+                }
             }
             case NON_BINARY -> {
                 return rate.add(BigDecimal.valueOf(5));

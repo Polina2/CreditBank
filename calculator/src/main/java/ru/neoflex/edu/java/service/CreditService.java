@@ -21,7 +21,7 @@ public class CreditService {
     private final OfferService offerService;
 
     public CreditDto calculateCredit(ScoringDataDto scoringDataDto) {
-        log.atDebug().log("calculateCredit called at {}", LocalDateTime.now());
+        log.debug("calculateCredit called at {}", LocalDateTime.now());
         BigDecimal rate = scoringService.countResultRate(scoringDataDto);
         BigDecimal monthlyPayment =
                 offerService.countMonthlyPayment(scoringDataDto.amount(), rate, scoringDataDto.term());

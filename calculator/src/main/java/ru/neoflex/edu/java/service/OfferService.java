@@ -23,7 +23,7 @@ public class OfferService {
     @Value(value = "${app.insurancePayment:100000}")
     private BigDecimal insurancePayment;
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto request) {
-        log.atDebug().log("getOffers called at {}", LocalDateTime.now());
+        log.debug("getOffers called at {}", LocalDateTime.now());
         UUID statementId = UUID.randomUUID();
         return List.of(
                 getOffer(false, false, request, statementId),
@@ -55,13 +55,13 @@ public class OfferService {
     public BigDecimal getTotalPayment(
             BigDecimal amount, BigDecimal rate, Integer term, BigDecimal monthlyPayment, Boolean isInsuranceEnabled
     ) {
-        log.atDebug().log("getTotalPayment called at {}", LocalDateTime.now());
+        log.debug("getTotalPayment called at {}", LocalDateTime.now());
         BigDecimal overpayment = countOverpayment(amount, rate, term, monthlyPayment);
         return amount.add(overpayment).add(isInsuranceEnabled ? insurancePayment : BigDecimal.ZERO);
     }
 
     public BigDecimal getResultRate(boolean isInsuranceEnabled, boolean isSalaryClient, BigDecimal baseRate) {
-        log.atDebug().log("getResultRate called at {}", LocalDateTime.now());
+        log.debug("getResultRate called at {}", LocalDateTime.now());
         BigDecimal resultRate = baseRate;
         if (isSalaryClient) {
             resultRate = resultRate.subtract(BigDecimal.ONE);
@@ -73,7 +73,7 @@ public class OfferService {
     }
 
     public BigDecimal countMonthlyPayment(BigDecimal amount, BigDecimal rate, Integer term) {
-        log.atDebug().log("countMonthlyPayment called at {}", LocalDateTime.now());
+        log.debug("countMonthlyPayment called at {}", LocalDateTime.now());
         BigDecimal monthRate = countMonthRate(rate);
         BigDecimal powResult = monthRate.add(BigDecimal.ONE).pow(term);
         BigDecimal result =
