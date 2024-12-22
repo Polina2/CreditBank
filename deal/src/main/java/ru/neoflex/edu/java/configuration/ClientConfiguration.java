@@ -3,12 +3,12 @@ package ru.neoflex.edu.java.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 @Configuration
 public class ClientConfiguration {
     @Bean
-    public WebClient calculatorWebClient(@Value("${deal.calculatorBaseUrl}") String baseUrl) {
-        return WebClient.builder().baseUrl(baseUrl).build();
+    public RestClient calculatorWebClient(@Value("${deal.calculatorBaseUrl}") String baseUrl) {
+        return RestClient.builder().baseUrl(baseUrl).build();
     }
 }

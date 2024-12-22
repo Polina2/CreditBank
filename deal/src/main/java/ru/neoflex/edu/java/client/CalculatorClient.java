@@ -1,29 +1,30 @@
 package ru.neoflex.edu.java.client;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 import ru.neoflex.edu.java.dto.CreditDto;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
 import ru.neoflex.edu.java.dto.ScoringDataDto;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class CalculatorClient {
-    private final WebClient calculatorWebClient;
+    private final RestClient calculatorWebClient;
 
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto request) {
         String path = "/calculator/offers";
         List<LoanOfferDto> response = calculatorWebClient
                 .post()
                 .uri(path)
+                .body(request)
                 .retrieve()
-                .bodyToFlux(LoanOfferDto.class)
-                .collectList()
-                .block();
+                .body(new ParameterizedTypeReference<>() {});
         return response;
     }
 
@@ -32,9 +33,9 @@ public class CalculatorClient {
         CreditDto response = calculatorWebClient
                 .post()
                 .uri(path)
+                .body(request)
                 .retrieve()
-                .bodyToMono(CreditDto.class)
-                .block();
+                .body(CreditDto.class);
         return response;
     }
 }

@@ -3,3 +3,12 @@ deal:
 
 server:
   port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/deal
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
