@@ -6,5 +6,6 @@ import ru.neoflex.edu.java.entity.Client;
 import java.util.UUID;
 
 public interface JpaClientRepository extends JpaRepository<Client, UUID> {
+    @Override
     Client save(Client entity);
 }

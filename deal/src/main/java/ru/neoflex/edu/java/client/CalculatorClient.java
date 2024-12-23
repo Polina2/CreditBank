@@ -1,6 +1,7 @@
 package ru.neoflex.edu.java.client;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -16,12 +17,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CalculatorClient {
     private final RestClient calculatorWebClient;
+    @Value("${deal.calculatorOffersUrl}")
+    private String offersPath;
+    @Value("${deal.calculatorCalcUrl}")
+    private String calcPath;
 
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto request) {
-        String path = "/calculator/offers";
         List<LoanOfferDto> response = calculatorWebClient
                 .post()
-                .uri(path)
+                .uri(offersPath)
                 .body(request)
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {});
@@ -29,10 +33,9 @@ public class CalculatorClient {
     }
 
     public CreditDto calculateCredit(ScoringDataDto request) {
-        String path = "/calculator/calc";
         CreditDto response = calculatorWebClient
                 .post()
-                .uri(path)
+                .uri(calcPath)
                 .body(request)
                 .retrieve()
                 .body(CreditDto.class);

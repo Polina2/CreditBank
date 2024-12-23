@@ -3,20 +3,25 @@ package ru.neoflex.edu.java.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.neoflex.edu.java.entity.enums.ApplicationStatus;
+import ru.neoflex.edu.java.entity.enums.ChangeType;
 import ru.neoflex.edu.java.entity.json.LoanOffer;
 import ru.neoflex.edu.java.entity.json.StatusHistory;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "statement")
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 public class Statement {
     @Id
@@ -38,5 +43,10 @@ public class Statement {
     @Column
     private String sesCode;
     @JdbcTypeCode(SqlTypes.JSON)
-    private StatusHistory statusHistory;
+    private List<StatusHistory> statusHistory;
+
+    public void setStatus(ApplicationStatus status) {
+        this.status = status;
+        this.statusHistory.add(new StatusHistory(status, Timestamp.valueOf(LocalDateTime.now()), ChangeType.AUTOMATIC));
+    }
 }

@@ -1,8 +1,14 @@
 deal:
   calculatorBaseUrl: http://localhost:8080
+  calculatorOffersUrl: /calculator/offers
+  calculatorCalcUrl: /calculator/calc
 
 server:
   port: 8081
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
 
 spring:
   datasource:
