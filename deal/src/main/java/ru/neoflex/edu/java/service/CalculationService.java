@@ -7,11 +7,13 @@ import ru.neoflex.edu.java.client.CalculatorClient;
 import ru.neoflex.edu.java.dto.CreditDto;
 import ru.neoflex.edu.java.dto.FinishRegistrationRequestDto;
 import ru.neoflex.edu.java.dto.ScoringDataDto;
+import ru.neoflex.edu.java.entity.Client;
 import ru.neoflex.edu.java.entity.Credit;
 import ru.neoflex.edu.java.entity.Statement;
 import ru.neoflex.edu.java.entity.enums.ApplicationStatus;
 import ru.neoflex.edu.java.entity.enums.CreditStatus;
 import ru.neoflex.edu.java.mapper.CreditDataMapper;
+import ru.neoflex.edu.java.repository.JpaClientRepository;
 import ru.neoflex.edu.java.repository.JpaCreditRepository;
 import ru.neoflex.edu.java.repository.JpaStatementRepository;
 
@@ -21,20 +23,29 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class CalculationService {
-    JpaStatementRepository statementRepository;
-    JpaCreditRepository creditRepository;
-    CalculatorClient calculatorClient;
-    CreditDataMapper mapper;
+    private final JpaStatementRepository statementRepository;
+    private final JpaCreditRepository creditRepository;
+    private final JpaClientRepository clientRepository;
+    private final CalculatorClient calculatorClient;
+    private final CreditDataMapper mapper;
     public void calculate(FinishRegistrationRequestDto request, String statementId) {
         Statement statement = statementRepository.findById(UUID.fromString(statementId)).orElseThrow();
-        ScoringDataDto scoringDataDto = mapper
-                .toScoringDataDto(request, statement.getClient(), statement.getAppliedOffer());
+        Client client = statement.getClient();
+        log.info("got client {}", client);
+        client = mapper.toClient(request, client);
+        log.info("new client {}", client);
+        clientRepository.save(client);
+        ScoringDataDto scoringDataDto = mapper.toScoringDataDto(client, statement.getAppliedOffer());
+        log.info("scoringdatadto {}", scoringDataDto);
+
         CreditDto creditDto = calculatorClient.calculateCredit(scoringDataDto);
         Credit credit = mapper.toCredit(creditDto);
         credit.setCreditStatus(CreditStatus.CALCULATED);
         creditRepository.save(credit);
         log.info("Saved credit {}", credit);
+
         statement.setStatus(ApplicationStatus.APPROVED);
+        statement.setCredit(credit);
         statementRepository.save(statement);
         log.info("Saved statement {}", statement);
     }

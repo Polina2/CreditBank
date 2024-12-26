@@ -1,14 +1,15 @@
 package ru.neoflex.edu.java.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
 import ru.neoflex.edu.java.entity.Client;
-import ru.neoflex.edu.java.entity.json.Passport;
 
 @Mapper(componentModel = "spring")
 @Component
 public interface LoanStatementRequestMapper {
-    Passport toPassport(LoanStatementRequestDto loanStatementRequestDto);
-    Client toClient(LoanStatementRequestDto loanStatementRequestDto);
+    @Mapping(target = "passport.series", source = "dto.passportSeries")
+    @Mapping(target = "passport.number", source = "dto.passportNumber")
+    Client toClient(LoanStatementRequestDto dto);
 }

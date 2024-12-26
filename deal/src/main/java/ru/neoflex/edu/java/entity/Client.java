@@ -1,9 +1,7 @@
 package ru.neoflex.edu.java.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.neoflex.edu.java.entity.enums.Gender;
@@ -16,8 +14,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "client")
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
 @ToString
 public class Client {
     @Id

@@ -1,8 +1,14 @@
 package ru.neoflex.edu.java.entity.json;
 
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class LoanOffer {
     private UUID statementId;
     private BigDecimal requestedAmount;

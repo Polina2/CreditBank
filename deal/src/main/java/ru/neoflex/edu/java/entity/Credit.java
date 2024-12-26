@@ -2,7 +2,9 @@ package ru.neoflex.edu.java.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.neoflex.edu.java.entity.enums.CreditStatus;
@@ -15,7 +17,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "credit")
 @AllArgsConstructor
+@NoArgsConstructor
 @Setter
+@ToString
 public class Credit {
     @Id
     @Column

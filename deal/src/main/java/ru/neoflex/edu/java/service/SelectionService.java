@@ -18,6 +18,7 @@ public class SelectionService {
     public void select(LoanOfferDto request) {
         Statement statement = statementRepository.findById(request.statementId()).orElseThrow();
         statement.setStatus(ApplicationStatus.PREAPPROVAL);
+        log.info("loanOffer {}", mapper.toLoanOffer(request));
         statement.setAppliedOffer(mapper.toLoanOffer(request));
         statementRepository.save(statement);
         log.info("Saved statement {}", statement);
