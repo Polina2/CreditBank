@@ -9,6 +9,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class LoanOffer {
     private UUID statementId;
     private BigDecimal requestedAmount;

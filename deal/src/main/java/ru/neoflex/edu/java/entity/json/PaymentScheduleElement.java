@@ -1,5 +1,6 @@
 package ru.neoflex.edu.java.entity.json;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class PaymentScheduleElement {
     private Integer number;
     private LocalDate date;

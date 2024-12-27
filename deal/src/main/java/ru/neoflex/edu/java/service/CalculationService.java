@@ -31,12 +31,10 @@ public class CalculationService {
     public void calculate(FinishRegistrationRequestDto request, String statementId) {
         Statement statement = statementRepository.findById(UUID.fromString(statementId)).orElseThrow();
         Client client = statement.getClient();
-        log.info("got client {}", client);
         client = mapper.toClient(request, client);
-        log.info("new client {}", client);
         clientRepository.save(client);
+        log.info("Saved client {}", client);
         ScoringDataDto scoringDataDto = mapper.toScoringDataDto(client, statement.getAppliedOffer());
-        log.info("scoringdatadto {}", scoringDataDto);
 
         CreditDto creditDto = calculatorClient.calculateCredit(scoringDataDto);
         Credit credit = mapper.toCredit(creditDto);

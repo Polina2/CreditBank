@@ -8,6 +8,7 @@ import java.sql.Date;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Passport {
     private String series;
     private String number;

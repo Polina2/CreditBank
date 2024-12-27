@@ -18,6 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Client {
     @Id
     @Column
