@@ -64,7 +64,7 @@ class OfferServiceTest {
     void countMonthRate() {
         BigDecimal rate = BigDecimal.valueOf(18.5);
 
-        BigDecimal expected = BigDecimal.valueOf(0.02);
+        BigDecimal expected = BigDecimal.valueOf(0.015417);
         BigDecimal actual = offerService.countMonthRate(rate);
 
         Assertions.assertEquals(expected, actual);
