@@ -7,9 +7,4 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface JpaStatementRepository extends JpaRepository<Statement, UUID> {
-    @Override
-    Statement save(Statement entity);
-
-    @Override
-    Optional<Statement> findById(UUID uuid);
 }

@@ -16,7 +16,7 @@ public interface DealApi {
     @PostMapping("/statement")
     List<LoanOfferDto> getOffers(@RequestBody @Valid LoanStatementRequestDto request);
     @PostMapping("/offer/select")
-    void select(@RequestBody LoanOfferDto loanOffer);
+    void select(@RequestBody @Valid LoanOfferDto loanOffer);
     @PostMapping("/calculate/{statementId}")
     void finishRegistration(@RequestBody FinishRegistrationRequestDto request, @PathVariable String statementId);
 }

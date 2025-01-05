@@ -2,6 +2,7 @@ package ru.neoflex.edu.java.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.neoflex.edu.java.entity.enums.ApplicationStatus;
@@ -19,9 +20,8 @@ import java.util.UUID;
 @Table(name = "statement")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
+@Accessors(chain = true)
 public class Statement {
     @Id
     @Column

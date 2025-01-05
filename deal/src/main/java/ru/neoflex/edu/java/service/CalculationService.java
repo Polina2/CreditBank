@@ -1,5 +1,7 @@
 package ru.neoflex.edu.java.service;
 
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,9 @@ public class CalculationService {
     private final JpaClientRepository clientRepository;
     private final CalculatorClient calculatorClient;
     private final CreditDataMapper mapper;
-    public void calculate(FinishRegistrationRequestDto request, String statementId) {
+
+    @Transactional
+    public void calculate(FinishRegistrationRequestDto request, @NotNull String statementId) {
         Statement statement = statementRepository.findById(UUID.fromString(statementId)).orElseThrow();
         Client client = statement.getClient();
         client = mapper.toClient(request, client);
