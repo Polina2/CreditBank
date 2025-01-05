@@ -1,6 +1,6 @@
 package ru.neoflex.edu.java.service;
 
-import lombok.NoArgsConstructor;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,13 +25,14 @@ public class StatementService {
     private final JpaStatementRepository statementRepository;
     private final CalculatorClient calculatorClient;
     private final LoanStatementRequestMapper mapper;
+
+    @Transactional
     public List<LoanOfferDto> createStatementAndGetOffers(LoanStatementRequestDto request) {
         Client client = mapper.toClient(request);
         client = clientRepository.save(client);
         log.info("Saved client {}", client);
 
-        Statement statement = new Statement(null, client, null, null,
-                Timestamp.valueOf(LocalDateTime.now()), null, null, null, null);
+        Statement statement = new Statement().setClient(client).setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         Statement savedStatement = statementRepository.save(statement);
         log.info("Saved statement {}", savedStatement);
 
@@ -40,6 +41,7 @@ public class StatementService {
                 .stream()
                 .map(loanOfferDto -> loanOfferDto.builder().statementId(savedStatement.getStatementId()).build())
                 .toList();
+        log.info("LoanOfferDto list with statementIds {}", response);
         return response;
     }
 }

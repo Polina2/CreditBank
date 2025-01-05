@@ -15,6 +15,7 @@ import ru.neoflex.edu.java.repository.JpaStatementRepository;
 public class SelectionService {
     private final JpaStatementRepository statementRepository;
     private final LoanOfferMapper mapper;
+
     public void select(LoanOfferDto request) {
         Statement statement = statementRepository.findById(request.statementId()).orElseThrow();
         statement.setStatus(ApplicationStatus.PREAPPROVAL);

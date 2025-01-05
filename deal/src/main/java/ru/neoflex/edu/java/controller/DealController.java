@@ -15,10 +15,11 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class DealController implements DealApi{
+public class DealController implements DealApi {
     private final StatementService statementService;
     private final SelectionService selectionService;
     private final CalculationService calculationService;
+
     @Override
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto request) {
         log.info("/deal/statement called with {}", request);
