@@ -1,3 +1,8 @@
+statement:
+  dealBaseUrl: http://localhost:8081
+  statementUrl: /statement
+  selectionUrl: /offer/select
+
 server:
   port: 8082
 
