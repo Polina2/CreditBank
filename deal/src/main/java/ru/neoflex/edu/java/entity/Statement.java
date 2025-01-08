@@ -28,10 +28,13 @@ public class Statement {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID statementId;
     @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client client;
     @ManyToOne
+    @JoinColumn(name = "credit_id")
     private Credit credit;
     @Column
+    @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
     @Column
     private Timestamp creationDate;

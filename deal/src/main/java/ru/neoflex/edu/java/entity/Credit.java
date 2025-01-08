@@ -39,5 +39,6 @@ public class Credit {
     @Column
     private Boolean salaryClient;
     @Column
+    @Enumerated(EnumType.STRING)
     private CreditStatus creditStatus;
 }

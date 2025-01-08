@@ -35,8 +35,10 @@ public class Client {
     @Column
     private String email;
     @Column
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column
+    @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
     @Column
     private Integer dependentAmount;
