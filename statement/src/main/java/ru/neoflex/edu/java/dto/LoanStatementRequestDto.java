@@ -42,4 +42,7 @@ public record LoanStatementRequestDto(
         @Pattern(regexp = "\\d{6}", message = "Invalid passport number")
         String passportNumber
 ) {
+        public LoanStatementRequestDto() {
+                this(null, null, null, null, null, null, null, null, null);
+        }
 }

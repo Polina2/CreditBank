@@ -16,4 +16,7 @@ public record LoanOfferDto(
         Boolean isInsuranceEnabled,
         Boolean isSalaryClient
 ) {
+        public LoanOfferDto() {
+                this(null, null, null, null, null, null, null, null);
+        }
 }
