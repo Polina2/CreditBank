@@ -8,7 +8,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-
 public abstract class IntegrationEnvironment {
     public static final PostgreSQLContainer<?> DB_CONTAINER;
 
@@ -30,7 +29,7 @@ public abstract class IntegrationEnvironment {
     }
 
     @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry){
+    static void properties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", DB_CONTAINER::getJdbcUrl);
         registry.add("spring.datasource.username", DB_CONTAINER::getUsername);
         registry.add("spring.datasource.password", DB_CONTAINER::getPassword);

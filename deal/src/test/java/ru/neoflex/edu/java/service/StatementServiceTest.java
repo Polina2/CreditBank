@@ -1,14 +1,10 @@
 package ru.neoflex.edu.java.service;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 import ru.neoflex.edu.java.client.CalculatorClient;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
@@ -53,8 +49,6 @@ class StatementServiceTest extends IntegrationEnvironment {
     }
 
     @Test
-    @Transactional
-    @Rollback
     void createStatementAndGetOffers() {
         LoanStatementRequestDto requestDto = new LoanStatementRequestDto(
                 BigDecimal.valueOf(3000000), 24,

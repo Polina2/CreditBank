@@ -13,4 +13,7 @@ public record CreditDto(
         Boolean isSalaryClient,
         List<PaymentScheduleElementDto> paymentSchedule
 ) {
+    public CreditDto() {
+        this(null, null, null, null, null, null, null, null);
+    }
 }

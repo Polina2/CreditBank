@@ -71,4 +71,8 @@ public record ScoringDataDto(
         public ScoringDataDto(Gender gender, LocalDate birthDate, MaritalStatus maritalStatus, EmploymentDto employment, Boolean isInsuranceEnabled, Boolean isSalaryClient) {
                 this(null, null, null, null, null, gender, birthDate, null, null, null, null, maritalStatus, null, employment, null, isInsuranceEnabled, isSalaryClient);
         }
+
+        public ScoringDataDto() {
+                this(null, null, null, null, null, null);
+        }
 }

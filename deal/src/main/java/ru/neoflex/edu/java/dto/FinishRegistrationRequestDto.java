@@ -14,4 +14,7 @@ public record FinishRegistrationRequestDto(
         EmploymentDto employment,
         String accountNumber
 ) {
+    public FinishRegistrationRequestDto() {
+        this(null, null, null, null, null, null, null);
+    }
 }
