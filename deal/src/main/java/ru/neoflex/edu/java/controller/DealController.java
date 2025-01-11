@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.neoflex.edu.java.dto.FinishRegistrationRequestDto;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
+import ru.neoflex.edu.java.kafka.DealProducer;
 import ru.neoflex.edu.java.service.CalculationService;
 import ru.neoflex.edu.java.service.SelectionService;
 import ru.neoflex.edu.java.service.StatementService;
@@ -19,6 +20,7 @@ public class DealController implements DealApi {
     private final StatementService statementService;
     private final SelectionService selectionService;
     private final CalculationService calculationService;
+    private final DealProducer dealProducer;
 
     @Override
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto request) {
@@ -30,11 +32,27 @@ public class DealController implements DealApi {
     public void select(LoanOfferDto loanOffer) {
         log.info("/deal/offer/select called with {}", loanOffer);
         selectionService.select(loanOffer);
+        dealProducer.sendMessage("finish-registration", "Ваша заявка предварительно одобрена, завершите оформление");
     }
 
     @Override
     public void finishRegistration(FinishRegistrationRequestDto request, String statementId) {
         log.info("/deal/calculate/{} called with {}", statementId, request);
         calculationService.calculate(request, statementId);
+    }
+
+    @Override
+    public void sendDocuments(String statementId) {
+
+    }
+
+    @Override
+    public void signDocuments(String statementId) {
+
+    }
+
+    @Override
+    public void confirmSign(String statementId) {
+
     }
 }

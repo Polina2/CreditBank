@@ -1,0 +1,12 @@
+dossier:
+  kafka:
+    topics:
+      fr: finish-registration
+      cd: create-documents
+      sd: send-documents
+      ss: send-ses
+      ci: credit-issued
+      std: statement-denied
+
+server:
+  port: 8083

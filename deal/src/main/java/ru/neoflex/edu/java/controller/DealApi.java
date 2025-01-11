@@ -19,4 +19,10 @@ public interface DealApi {
     void select(@RequestBody @Valid LoanOfferDto loanOffer);
     @PostMapping("/calculate/{statementId}")
     void finishRegistration(@RequestBody FinishRegistrationRequestDto request, @PathVariable String statementId);
+    @PostMapping("/document/{statementId}/send")
+    void sendDocuments(@PathVariable String statementId);
+    @PostMapping("/document/{statementId}/sign")
+    void signDocuments(@PathVariable String statementId);
+    @PostMapping("/document/{statementId}/code")
+    void confirmSign(@PathVariable String statementId);
 }

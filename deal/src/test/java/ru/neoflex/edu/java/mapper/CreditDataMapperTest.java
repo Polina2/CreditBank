@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CreditDataMapperTest {
 
     private final CreditDataMapper mapper = new CreditDataMapperImpl();
-    
+
     @Test
     void toPaymentScheduleElement() {
         PaymentScheduleElementDto dto = new PaymentScheduleElementDto(
@@ -101,7 +101,7 @@ class CreditDataMapperTest {
         passport.setNumber("123456");
         passport.setSeries("1234");
         client.setEmail("qq@mail.ru");
-        client.setBirthDate(Date.valueOf(LocalDate.of(2002, 10,1)));
+        client.setBirthDate(Date.valueOf(LocalDate.of(2002, 10, 1)));
         client.setPassport(passport);
         if (!isFull) {
             return client;
