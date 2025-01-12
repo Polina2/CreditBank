@@ -9,12 +9,14 @@ import ru.neoflex.edu.java.dto.LoanOfferDto;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
 import ru.neoflex.edu.java.entity.Client;
 import ru.neoflex.edu.java.entity.Statement;
+import ru.neoflex.edu.java.entity.enums.ApplicationStatus;
 import ru.neoflex.edu.java.mapper.LoanStatementRequestMapper;
 import ru.neoflex.edu.java.repository.JpaClientRepository;
 import ru.neoflex.edu.java.repository.JpaStatementRepository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,7 +34,11 @@ public class StatementService {
         client = clientRepository.save(client);
         log.info("Saved client {}", client);
 
-        Statement statement = new Statement().setClient(client).setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+        Statement statement = new Statement()
+                .setClient(client)
+                .setCreationDate(Timestamp.valueOf(LocalDateTime.now()))
+                .setStatus(ApplicationStatus.PREAPPROVAL)
+                .setStatusHistory(new ArrayList<>());
         Statement savedStatement = statementRepository.save(statement);
         log.info("Saved statement {}", savedStatement);
 

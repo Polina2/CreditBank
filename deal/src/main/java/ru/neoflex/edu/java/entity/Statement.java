@@ -46,12 +46,4 @@ public class Statement {
     private String sesCode;
     @JdbcTypeCode(SqlTypes.JSON)
     private List<StatusHistory> statusHistory;
-
-    public void setStatus(ApplicationStatus status) {
-        this.status = status;
-        if (this.statusHistory == null) {
-            this.statusHistory = new ArrayList<>();
-        }
-        this.statusHistory.add(new StatusHistory(status, Timestamp.valueOf(LocalDateTime.now()), ChangeType.AUTOMATIC));
-    }
 }

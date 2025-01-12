@@ -2,6 +2,16 @@ deal:
   calculatorBaseUrl: http://localhost:8080
   calculatorOffersUrl: /calculator/offers
   calculatorCalcUrl: /calculator/calc
+  kafka:
+    topics:
+      finish-registration: finish-registration
+      create-documents: create-documents
+      send-documents: send-documents
+  mail:
+    text:
+      finish-registration: Ваша заявка предварительно одобрена, завершите оформление
+      create-documents: Кредит одобрен. Оформить документы http://localhost:8081/deal/document/{statementId}/send
+      send-documents: Ваши документы готовы. Подписать http://localhost:8081/deal/document/{statementId}/sign
 
 server:
   port: 8081
@@ -20,3 +30,6 @@ spring:
       ddl-auto: validate
   liquibase:
     change-log: classpath:/migrations/master.xml
+  kafka:
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

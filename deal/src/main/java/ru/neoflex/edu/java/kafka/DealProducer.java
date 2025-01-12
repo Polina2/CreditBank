@@ -9,7 +9,11 @@ import org.springframework.stereotype.Component;
 public class DealProducer {
     private final KafkaTemplate<Object, Object> kafkaTemplate;
 
-    public void sendMessage(String topicName, String msg) {
+    public void sendMessage(String topicName, Object msg) {
         kafkaTemplate.send(topicName, msg);
+    }
+
+    public void sendMessage(String topicName) {
+        sendMessage(topicName, null);
     }
 }
