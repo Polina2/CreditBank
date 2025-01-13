@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.neoflex.edu.java.dto.FinishRegistrationRequestDto;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
+import ru.neoflex.edu.java.dto.SesCodeDto;
 
 import java.util.List;
 
@@ -24,5 +25,5 @@ public interface DealApi {
     @PostMapping("/document/{statementId}/sign")
     void signDocuments(@PathVariable String statementId);
     @PostMapping("/document/{statementId}/code")
-    void confirmSign(@PathVariable String statementId);
+    void confirmSign(@PathVariable String statementId, @RequestBody SesCodeDto sesCode);
 }

@@ -17,6 +17,7 @@ import ru.neoflex.edu.java.entity.Credit;
 import ru.neoflex.edu.java.entity.Statement;
 import ru.neoflex.edu.java.entity.enums.ApplicationStatus;
 import ru.neoflex.edu.java.entity.enums.CreditStatus;
+import ru.neoflex.edu.java.exception.CalculatorException;
 import ru.neoflex.edu.java.kafka.DealProducer;
 import ru.neoflex.edu.java.mapper.CreditDataMapper;
 import ru.neoflex.edu.java.repository.JpaClientRepository;
@@ -38,8 +39,20 @@ public class CalculationService {
 
     @Value("${deal.kafka.topics.create-documents}")
     private String createDocumentsTopic;
+    @Value("${deal.kafka.topics.statement-denied}")
+    private String statementDeniedTopic;
     @Value("${deal.mail.text.create-documents}")
     private String text;
+    @Value("${deal.mail.text.statement-denied}")
+    private String denyText;
+
+    private void denyStatement(Statement statement) {
+        EmailMessage emailMessage = new EmailMessage(
+                statement.getClient().getEmail(), Theme.STATEMENT_DENIED, statement.getStatementId(), denyText
+        );
+        dealProducer.sendMessage(statementDeniedTopic, emailMessage);
+        log.info("Sent message {}", emailMessage);
+    }
 
     @Transactional
     public void calculate(FinishRegistrationRequestDto request, @NotNull String statementId) {
@@ -49,15 +62,19 @@ public class CalculationService {
         clientRepository.save(client);
         log.info("Saved client {}", client);
         ScoringDataDto scoringDataDto = mapper.toScoringDataDto(client, statement.getAppliedOffer());
-//TODO: catch exception
-        CreditDto creditDto = calculatorClient.calculateCredit(scoringDataDto);
-        Credit credit = mapper.toCredit(creditDto);
-        credit.setCreditStatus(CreditStatus.CALCULATED);
-        creditRepository.save(credit);
-        log.info("Saved credit {}", credit);
 
-        statement.setStatus(ApplicationStatus.CC_APPROVED);
-        statement.setCredit(credit);
+        try{
+            CreditDto creditDto = calculatorClient.calculateCredit(scoringDataDto);
+            Credit credit = mapper.toCredit(creditDto);
+            credit.setCreditStatus(CreditStatus.CALCULATED);
+            creditRepository.save(credit);
+            log.info("Saved credit {}", credit);
+
+            statement.setStatus(ApplicationStatus.CC_APPROVED);
+            statement.setCredit(credit);
+        } catch (CalculatorException e) {
+            denyStatement(statement);
+        }
         statementRepository.save(statement);
         log.info("Saved statement {}", statement);
 

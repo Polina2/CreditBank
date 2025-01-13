@@ -7,11 +7,18 @@ deal:
       finish-registration: finish-registration
       create-documents: create-documents
       send-documents: send-documents
+      ses-code: send-ses
+      credit-issued: credit-issued
+      statement-denied: statement-denied
   mail:
     text:
       finish-registration: Ваша заявка предварительно одобрена, завершите оформление
       create-documents: Кредит одобрен. Оформить документы http://localhost:8081/deal/document/{statementId}/send
       send-documents: Ваши документы готовы. Подписать http://localhost:8081/deal/document/{statementId}/sign
+      ses-code: Подтвердите подписание документов http://localhost:8081/deal/document/{statementId}/code Код подтверждения {code}
+      credit-issued: Кредит оформлен.
+      wrong-ses-code: Неверный код
+      statement-denied: Заявка на кредит отклонена
 
 server:
   port: 8081

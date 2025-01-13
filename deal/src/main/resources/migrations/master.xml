@@ -8,4 +8,5 @@
     <include file="01-client.xml" relativeToChangelogFile="true"/>
     <include file="02-credit.xml" relativeToChangelogFile="true"/>
     <include file="03-statement.xml" relativeToChangelogFile="true"/>
+    <include file="04-statement.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

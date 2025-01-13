@@ -2,7 +2,6 @@ package ru.neoflex.edu.java.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,10 @@ import ru.neoflex.edu.java.service.EmailService;
 public class DossierListener {
     private final EmailService emailService;
 
+    private void sendMessage(EmailMessage email) {
+        emailService.sendMessage(email.address(), email.theme().name(), email.text());
+    }
+
     @KafkaListener(
             topics = "${dossier.kafka.topics.fr}",
             groupId = "dossier",
@@ -22,7 +25,7 @@ public class DossierListener {
     )
     public void finishRegistration(@Payload EmailMessage email) {
         log.info("Got finish registration message {}", email);
-        emailService.sendMessage(email.address(), email.theme().name(), email.text());
+        sendMessage(email);
     }
 
     @KafkaListener(
@@ -32,7 +35,7 @@ public class DossierListener {
     )
     public void createDocuments(@Payload EmailMessage email) {
         log.info("Got create documents message");
-        emailService.sendMessage(email.address(), email.theme().name(), email.text());
+        sendMessage(email);
     }
 
     @KafkaListener(
@@ -42,7 +45,7 @@ public class DossierListener {
     )
     public void sendDocuments(@Payload EmailMessage email) {
         log.info("Got send documents message");
-        emailService.sendMessage(email.address(), email.theme().name(), email.text());
+        sendMessage(email);
     }
 
     @KafkaListener(
@@ -50,8 +53,9 @@ public class DossierListener {
             groupId = "dossier",
             containerFactory = "kafkaListenerContainerFactory"
     )
-    public void sesCode() {
+    public void sesCode(@Payload EmailMessage email) {
         log.info("Got ses code message");
+        sendMessage(email);
     }
 
     @KafkaListener(
@@ -59,8 +63,9 @@ public class DossierListener {
             groupId = "dossier",
             containerFactory = "kafkaListenerContainerFactory"
     )
-    public void creditIssued() {
+    public void creditIssued(@Payload EmailMessage email) {
         log.info("Got credit issued message");
+        sendMessage(email);
     }
 
     @KafkaListener(
@@ -68,7 +73,8 @@ public class DossierListener {
             groupId = "dossier",
             containerFactory = "kafkaListenerContainerFactory"
     )
-    public void statementDenied() {
+    public void statementDenied(@Payload EmailMessage email) {
         log.info("Got statement denied message");
+        sendMessage(email);
     }
 }

@@ -12,8 +12,4 @@ public class DealProducer {
     public void sendMessage(String topicName, Object msg) {
         kafkaTemplate.send(topicName, msg);
     }
-
-    public void sendMessage(String topicName) {
-        sendMessage(topicName, null);
-    }
 }

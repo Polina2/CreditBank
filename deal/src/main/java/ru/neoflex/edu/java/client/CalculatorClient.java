@@ -5,11 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import ru.neoflex.edu.java.dto.CreditDto;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
 import ru.neoflex.edu.java.dto.ScoringDataDto;
+import ru.neoflex.edu.java.exception.CalculatorException;
 
 import java.util.List;
 
@@ -35,13 +37,17 @@ public class CalculatorClient {
     }
 
     public CreditDto calculateCredit(ScoringDataDto request) {
-        CreditDto response = calculatorWebClient
-                .post()
-                .uri(calcPath)
-                .body(request)
-                .retrieve()
-                .body(CreditDto.class);
-        log.info("Response from {}: {}", calcPath, response);
-        return response;
+        try {
+            CreditDto response = calculatorWebClient
+                    .post()
+                    .uri(calcPath)
+                    .body(request)
+                    .retrieve()
+                    .body(CreditDto.class);
+            log.info("Response from {}: {}", calcPath, response);
+            return response;
+        } catch (HttpClientErrorException e) {
+            throw new CalculatorException(e.getMessage());
+        }
     }
 }

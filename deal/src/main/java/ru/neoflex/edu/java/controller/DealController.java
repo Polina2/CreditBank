@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.neoflex.edu.java.dto.FinishRegistrationRequestDto;
 import ru.neoflex.edu.java.dto.LoanOfferDto;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
-import ru.neoflex.edu.java.service.CalculationService;
-import ru.neoflex.edu.java.service.DocumentsService;
-import ru.neoflex.edu.java.service.SelectionService;
-import ru.neoflex.edu.java.service.StatementService;
+import ru.neoflex.edu.java.dto.SesCodeDto;
+import ru.neoflex.edu.java.service.*;
 
 import java.util.List;
 
@@ -21,6 +19,8 @@ public class DealController implements DealApi {
     private final SelectionService selectionService;
     private final CalculationService calculationService;
     private final DocumentsService documentsService;
+    private final SesCodeService sesCodeService;
+    private final CreditIssueService creditIssueService;
 
     @Override
     public List<LoanOfferDto> getOffers(LoanStatementRequestDto request) {
@@ -49,10 +49,12 @@ public class DealController implements DealApi {
     @Override
     public void signDocuments(String statementId) {
         log.info("/deal/document/{}/sign called", statementId);
+        sesCodeService.sendSesCode(statementId);
     }
 
     @Override
-    public void confirmSign(String statementId) {
-
+    public void confirmSign(String statementId, SesCodeDto sesCode) {
+        log.info("/deal/document/{}/code called with ses-code {}", statementId, sesCode);
+        creditIssueService.signDocuments(statementId, sesCode.sesCode());
     }
 }
