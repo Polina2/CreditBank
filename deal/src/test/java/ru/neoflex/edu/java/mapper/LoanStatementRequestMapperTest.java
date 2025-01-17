@@ -8,6 +8,7 @@ import ru.neoflex.edu.java.entity.json.Passport;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 class LoanStatementRequestMapperTest {
@@ -37,6 +38,12 @@ class LoanStatementRequestMapperTest {
 
         Client actualClient = mapper.toClient(dto);
 
-        Assertions.assertEquals(expectedClient, actualClient);
+        org.assertj.core.api.Assertions.assertThat(actualClient)
+                .usingRecursiveComparison()
+                .ignoringFields("birthDate")
+                .isEqualTo(expectedClient);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        org.assertj.core.api.Assertions.assertThat(sdf.format(actualClient.getBirthDate()))
+                .isEqualTo(sdf.format(expectedClient.getBirthDate()));
     }
 }

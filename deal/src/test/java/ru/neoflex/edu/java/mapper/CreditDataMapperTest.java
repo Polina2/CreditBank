@@ -16,6 +16,7 @@ import ru.neoflex.edu.java.entity.json.PaymentScheduleElement;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -40,7 +41,13 @@ class CreditDataMapperTest {
 
         PaymentScheduleElement actualPaymentScheduleElement = mapper.toPaymentScheduleElement(dto);
 
-        Assertions.assertEquals(expectedPaymentScheduleElement, actualPaymentScheduleElement);
+        org.assertj.core.api.Assertions.assertThat(actualPaymentScheduleElement)
+                .usingRecursiveComparison()
+                .ignoringFields("date")
+                .isEqualTo(expectedPaymentScheduleElement);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        org.assertj.core.api.Assertions.assertThat(sdf.format(actualPaymentScheduleElement.getDate()))
+                .isEqualTo(sdf.format(expectedPaymentScheduleElement.getDate()));
     }
 
     private static PaymentScheduleElement getPaymentScheduleElement() {
@@ -144,7 +151,19 @@ class CreditDataMapperTest {
 
         Client actualClient = mapper.toClient(request, client);
 
-        Assertions.assertEquals(expectedClient, actualClient);
+        org.assertj.core.api.Assertions.assertThat(actualClient)
+                .usingRecursiveComparison()
+                .ignoringFields("birthDate", "passport")
+                .isEqualTo(expectedClient);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        org.assertj.core.api.Assertions.assertThat(sdf.format(actualClient.getBirthDate()))
+                .isEqualTo(sdf.format(expectedClient.getBirthDate()));
+        org.assertj.core.api.Assertions.assertThat(actualClient.getPassport())
+                .usingRecursiveComparison()
+                .ignoringFields("issueDate")
+                .isEqualTo(expectedClient.getPassport());
+        org.assertj.core.api.Assertions.assertThat(sdf.format(actualClient.getPassport().getIssueDate()))
+                .isEqualTo(sdf.format(expectedClient.getPassport().getIssueDate()));
     }
 
     @Test
