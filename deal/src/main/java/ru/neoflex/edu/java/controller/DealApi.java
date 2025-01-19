@@ -13,7 +13,7 @@ import ru.neoflex.edu.java.dto.SesCodeDto;
 import java.util.List;
 
 @RequestMapping("/deal")
-public interface DealApi {
+public interface DealApi extends BaseDealApi {
     @PostMapping("/statement")
     List<LoanOfferDto> getOffers(@RequestBody @Valid LoanStatementRequestDto request);
     @PostMapping("/offer/select")

@@ -15,6 +15,7 @@ import java.util.UUID;
 @Table(name = "credit")
 @NoArgsConstructor
 @Setter
+@Getter
 @ToString
 @EqualsAndHashCode
 public class Credit {
