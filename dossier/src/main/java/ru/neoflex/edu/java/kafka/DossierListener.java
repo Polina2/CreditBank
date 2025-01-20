@@ -5,7 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import ru.neoflex.edu.java.dto.ApplicationStatusDto;
 import ru.neoflex.edu.java.dto.EmailMessage;
+import ru.neoflex.edu.java.dto.enums.ApplicationStatus;
+import ru.neoflex.edu.java.service.DealService;
 import ru.neoflex.edu.java.service.EmailService;
 
 @Component
@@ -13,6 +16,7 @@ import ru.neoflex.edu.java.service.EmailService;
 @RequiredArgsConstructor
 public class DossierListener {
     private final EmailService emailService;
+    private final DealService dealService;
 
     private void sendMessage(EmailMessage email) {
         emailService.sendMessage(email.address(), email.theme().name(), email.text());
@@ -45,6 +49,9 @@ public class DossierListener {
     )
     public void sendDocuments(@Payload EmailMessage email) {
         log.info("Got send documents message");
+        dealService.updateStatus(
+                email.statementId().toString(), new ApplicationStatusDto(ApplicationStatus.DOCUMENT_CREATED)
+        );
         sendMessage(email);
     }
 
