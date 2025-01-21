@@ -1,7 +1,7 @@
 gateway:
   statementClient:
     baseUrl: http://localhost:8082
-    offersUrl: /statement/offer
+    offerUrl: /statement/offer
     statementUrl: /statement
   dealClient:
     baseUrl: http://localhost:8081

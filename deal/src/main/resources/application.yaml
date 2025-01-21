@@ -13,9 +13,9 @@ deal:
   mail:
     text:
       finish-registration: Ваша заявка предварительно одобрена, завершите оформление
-      create-documents: Кредит одобрен. Оформить документы http://localhost:8081/deal/document/{statementId}/send
-      send-documents: Ваши документы готовы. Подписать http://localhost:8081/deal/document/{statementId}/sign
-      ses-code: Подтвердите подписание документов http://localhost:8081/deal/document/{statementId}/code Код подтверждения {code}
+      create-documents: Кредит одобрен. Оформить документы http://localhost:8084/document/{statementId}
+      send-documents: Ваши документы готовы. Подписать http://localhost:8084/document/{statementId}/sign
+      ses-code: Подтвердите подписание документов http://localhost:8084/document/{statementId}/sign/code Код подтверждения {code}
       credit-issued: Кредит оформлен.
       wrong-ses-code: Неверный код
       statement-denied: Заявка на кредит отклонена
