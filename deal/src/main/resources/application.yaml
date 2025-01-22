@@ -1,0 +1,20 @@
+deal:
+  calculatorBaseUrl: http://localhost:8080
+  calculatorOffersUrl: /calculator/offers
+  calculatorCalcUrl: /calculator/calc
+
+server:
+  port: 8081
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/deal
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update

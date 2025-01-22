@@ -22,7 +22,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.0.4</version>
+                <version>3.2.4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -41,7 +41,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.0.4</version>
+                <version>3.2.4</version>
                 <configuration>
                     <layers>
                         <enabled>true</enabled>
@@ -89,6 +89,7 @@
 
     <modules>
         <module>calculator</module>
+        <module>deal</module>
     </modules>
 
 </project>
