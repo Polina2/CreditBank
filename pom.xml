@@ -92,6 +92,7 @@
         <module>deal</module>
         <module>statement</module>
         <module>dossier</module>
+        <module>gateway</module>
     </modules>
 
 </project>

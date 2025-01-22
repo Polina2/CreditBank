@@ -7,6 +7,8 @@ dossier:
       ss: send-ses
       ci: credit-issued
       std: statement-denied
+  dealBaseUrl: http://localhost:8081
+  updateUrl: /deal/admin/statement/{statementId}/status
 
 server:
   port: 8083

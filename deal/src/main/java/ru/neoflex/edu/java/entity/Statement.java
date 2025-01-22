@@ -12,7 +12,6 @@ import ru.neoflex.edu.java.entity.json.StatusHistory;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,4 +45,12 @@ public class Statement {
     private String sesCode;
     @JdbcTypeCode(SqlTypes.JSON)
     private List<StatusHistory> statusHistory;
+
+    public void addStatusHistory() {
+        this.statusHistory.add(
+                new StatusHistory(
+                        this.status, Timestamp.valueOf(LocalDateTime.now()), ChangeType.AUTOMATIC
+                )
+        );
+    }
 }

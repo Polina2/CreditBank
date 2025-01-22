@@ -34,6 +34,7 @@ public class CreditIssueService {
         String trueSesCode = statement.getSesCode();
         if (trueSesCode.equals(sesCode)) {
             statement.setStatus(ApplicationStatus.DOCUMENT_SIGNED);
+            statement.addStatusHistory();
             statement = statementRepository.save(statement);
             log.info("Saved statement {}", statement);
 
@@ -44,6 +45,7 @@ public class CreditIssueService {
             log.info("Sent message {}", emailMessage);
 
             statement.setStatus(ApplicationStatus.CREDIT_ISSUED);
+            statement.addStatusHistory();
             statementRepository.save(statement);
             log.info("Saved statement {}", statement);
         } else {
