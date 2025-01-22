@@ -43,6 +43,7 @@ class LoanStatementRequestMapperTest {
                 .ignoringFields("birthDate")
                 .isEqualTo(expectedClient);
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
         Assertions.assertThat(sdf.format(actualClient.getBirthDate()))
                 .isEqualTo(sdf.format(expectedClient.getBirthDate()));
     }

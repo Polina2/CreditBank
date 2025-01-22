@@ -1,0 +1,11 @@
+statement:
+  dealBaseUrl: http://localhost:8081/deal
+  statementUrl: /statement
+  selectionUrl: /offer/select
+
+server:
+  port: 8082
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui

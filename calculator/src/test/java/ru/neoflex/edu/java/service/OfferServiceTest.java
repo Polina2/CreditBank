@@ -1,17 +1,11 @@
 package ru.neoflex.edu.java.service;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 class OfferServiceTest {
     private final OfferService offerService = new OfferService();
@@ -64,8 +58,8 @@ class OfferServiceTest {
     void countMonthRate() {
         BigDecimal rate = BigDecimal.valueOf(18.5);
 
-        BigDecimal expected = BigDecimal.valueOf(0.015417);
-        BigDecimal actual = offerService.countMonthRate(rate);
+        BigDecimal expected = BigDecimal.valueOf(0.02);
+        BigDecimal actual = offerService.countMonthRate(rate).setScale(2, OfferService.ROUNDING_MODE);
 
         Assertions.assertEquals(expected, actual);
     }

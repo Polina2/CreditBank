@@ -41,13 +41,19 @@ class CreditDataMapperTest {
 
         PaymentScheduleElement actualPaymentScheduleElement = mapper.toPaymentScheduleElement(dto);
 
-        Assertions.assertEquals(expectedPaymentScheduleElement, actualPaymentScheduleElement);
+        org.assertj.core.api.Assertions.assertThat(actualPaymentScheduleElement)
+                .usingRecursiveComparison()
+                .ignoringFields("date")
+                .isEqualTo(expectedPaymentScheduleElement);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        org.assertj.core.api.Assertions.assertThat(sdf.format(actualPaymentScheduleElement.getDate()))
+                .isEqualTo(sdf.format(expectedPaymentScheduleElement.getDate()));
     }
 
     private static PaymentScheduleElement getPaymentScheduleElement() {
         PaymentScheduleElement expectedPaymentScheduleElement = new PaymentScheduleElement();
         expectedPaymentScheduleElement.setNumber(1);
-        expectedPaymentScheduleElement.setDate(LocalDate.of(2022, 10, 1));
+        expectedPaymentScheduleElement.setDate(Date.valueOf(LocalDate.of(2022, 10, 1)));
         expectedPaymentScheduleElement.setTotalPayment(BigDecimal.valueOf(1000));
         expectedPaymentScheduleElement.setInterestPayment(BigDecimal.valueOf(500));
         expectedPaymentScheduleElement.setDebtPayment(BigDecimal.valueOf(500));
