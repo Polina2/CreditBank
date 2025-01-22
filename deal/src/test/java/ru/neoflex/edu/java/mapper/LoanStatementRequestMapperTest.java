@@ -1,6 +1,6 @@
 package ru.neoflex.edu.java.mapper;
 
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.neoflex.edu.java.dto.LoanStatementRequestDto;
 import ru.neoflex.edu.java.entity.Client;
@@ -38,12 +38,13 @@ class LoanStatementRequestMapperTest {
 
         Client actualClient = mapper.toClient(dto);
 
-        org.assertj.core.api.Assertions.assertThat(actualClient)
+        Assertions.assertThat(actualClient)
                 .usingRecursiveComparison()
                 .ignoringFields("birthDate")
                 .isEqualTo(expectedClient);
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        org.assertj.core.api.Assertions.assertThat(sdf.format(actualClient.getBirthDate()))
+
+        Assertions.assertThat(sdf.format(actualClient.getBirthDate()))
                 .isEqualTo(sdf.format(expectedClient.getBirthDate()));
     }
 }
