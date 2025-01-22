@@ -1,0 +1,33 @@
+dossier:
+  kafka:
+    topics:
+      fr: finish-registration
+      cd: create-documents
+      sd: send-documents
+      ss: send-ses
+      ci: credit-issued
+      std: statement-denied
+
+server:
+  port: 8083
+
+spring:
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    username: lygina.polina.03@mail.ru
+    password: ${password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+  kafka:
+    consumer:
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: ru.neoflex.edu.java.dto

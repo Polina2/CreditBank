@@ -4,16 +4,21 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.neoflex.edu.java.client.CalculatorClient;
 import ru.neoflex.edu.java.dto.CreditDto;
+import ru.neoflex.edu.java.dto.EmailMessage;
 import ru.neoflex.edu.java.dto.FinishRegistrationRequestDto;
 import ru.neoflex.edu.java.dto.ScoringDataDto;
+import ru.neoflex.edu.java.dto.enums.Theme;
 import ru.neoflex.edu.java.entity.Client;
 import ru.neoflex.edu.java.entity.Credit;
 import ru.neoflex.edu.java.entity.Statement;
 import ru.neoflex.edu.java.entity.enums.ApplicationStatus;
 import ru.neoflex.edu.java.entity.enums.CreditStatus;
+import ru.neoflex.edu.java.exception.CalculatorException;
+import ru.neoflex.edu.java.kafka.DealProducer;
 import ru.neoflex.edu.java.mapper.CreditDataMapper;
 import ru.neoflex.edu.java.repository.JpaClientRepository;
 import ru.neoflex.edu.java.repository.JpaCreditRepository;
@@ -30,6 +35,24 @@ public class CalculationService {
     private final JpaClientRepository clientRepository;
     private final CalculatorClient calculatorClient;
     private final CreditDataMapper mapper;
+    private final DealProducer dealProducer;
+
+    @Value("${deal.kafka.topics.create-documents}")
+    private String createDocumentsTopic;
+    @Value("${deal.kafka.topics.statement-denied}")
+    private String statementDeniedTopic;
+    @Value("${deal.mail.text.create-documents}")
+    private String text;
+    @Value("${deal.mail.text.statement-denied}")
+    private String denyText;
+
+    private void denyStatement(Statement statement) {
+        EmailMessage emailMessage = new EmailMessage(
+                statement.getClient().getEmail(), Theme.STATEMENT_DENIED, statement.getStatementId(), denyText
+        );
+        dealProducer.sendMessage(statementDeniedTopic, emailMessage);
+        log.info("Sent message {}", emailMessage);
+    }
 
     @Transactional
     public void calculate(FinishRegistrationRequestDto request, @NotNull String statementId) {
@@ -40,15 +63,26 @@ public class CalculationService {
         log.info("Saved client {}", client);
         ScoringDataDto scoringDataDto = mapper.toScoringDataDto(client, statement.getAppliedOffer());
 
-        CreditDto creditDto = calculatorClient.calculateCredit(scoringDataDto);
-        Credit credit = mapper.toCredit(creditDto);
-        credit.setCreditStatus(CreditStatus.CALCULATED);
-        creditRepository.save(credit);
-        log.info("Saved credit {}", credit);
+        try{
+            CreditDto creditDto = calculatorClient.calculateCredit(scoringDataDto);
+            Credit credit = mapper.toCredit(creditDto);
+            credit.setCreditStatus(CreditStatus.CALCULATED);
+            creditRepository.save(credit);
+            log.info("Saved credit {}", credit);
 
-        statement.setStatus(ApplicationStatus.APPROVED);
-        statement.setCredit(credit);
+            statement.setStatus(ApplicationStatus.CC_APPROVED);
+            statement.setCredit(credit);
+        } catch (CalculatorException e) {
+            denyStatement(statement);
+        }
         statementRepository.save(statement);
         log.info("Saved statement {}", statement);
+
+        text = text.replace("{statementId}", statementId);
+        EmailMessage emailMessage = new EmailMessage(
+                client.getEmail(), Theme.CREATE_DOCUMENTS, statement.getStatementId(), text
+        );
+        dealProducer.sendMessage(createDocumentsTopic, emailMessage);
+        log.info("Sent message {}", emailMessage);
     }
 }
