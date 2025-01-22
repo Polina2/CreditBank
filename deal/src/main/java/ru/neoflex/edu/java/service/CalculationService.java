@@ -71,6 +71,7 @@ public class CalculationService {
             log.info("Saved credit {}", credit);
 
             statement.setStatus(ApplicationStatus.CC_APPROVED);
+            statement.addStatusHistory();
             statement.setCredit(credit);
         } catch (CalculatorException e) {
             denyStatement(statement);

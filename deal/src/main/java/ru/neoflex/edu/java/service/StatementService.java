@@ -39,6 +39,7 @@ public class StatementService {
                 .setCreationDate(Timestamp.valueOf(LocalDateTime.now()))
                 .setStatus(ApplicationStatus.PREAPPROVAL)
                 .setStatusHistory(new ArrayList<>());
+        statement.addStatusHistory();
         Statement savedStatement = statementRepository.save(statement);
         log.info("Saved statement {}", savedStatement);
 

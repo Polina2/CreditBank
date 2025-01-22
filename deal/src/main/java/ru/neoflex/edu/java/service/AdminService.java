@@ -32,6 +32,7 @@ public class AdminService {
     public void updateStatus(String statementId, ApplicationStatusDto statusDto) {
         Statement statement = statementRepository.findById(UUID.fromString(statementId)).orElseThrow();
         statement.setStatus(statusDto.status());
+        statement.addStatusHistory();
         statement = statementRepository.save(statement);
         log.info("Saved statement {}", statement);
     }

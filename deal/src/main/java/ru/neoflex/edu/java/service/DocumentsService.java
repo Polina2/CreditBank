@@ -28,6 +28,7 @@ public class DocumentsService {
     public void createDocuments(String statementId) {
         Statement statement = statementRepository.findById(UUID.fromString(statementId)).orElseThrow();
         statement.setStatus(ApplicationStatus.PREPARE_DOCUMENTS);
+        statement.addStatusHistory();
         statementRepository.save(statement);
         log.info("Saved statement {}", statement);
 
