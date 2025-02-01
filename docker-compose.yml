@@ -1,0 +1,64 @@
+version: '1'
+services:
+  calculator:
+    container_name: calculator
+    build:
+      dockerfile: calculator.Dockerfile
+    image: calculator:latest
+    ports:
+      - 8080:8080
+    networks:
+      - credit-bank-network
+
+  deal:
+    container_name: deal
+    build:
+      dockerfile: deal.Dockerfile
+    image: deal:latest
+    ports:
+      - 8081:8081
+    networks:
+      - credit-bank-network
+
+  statement:
+    container_name: statement
+    build:
+      dockerfile: statement.Dockerfile
+    image: statement:latest
+    ports:
+      - 8082:8082
+    networks:
+      - credit-bank-network
+
+  dossier:
+    container_name: dossier
+    build:
+      dockerfile: dossier.Dockerfile
+      secrets:
+        - mail_password
+    image: dossier:latest
+    ports:
+      - 8083:8083
+    environment:
+      password: /run/secrets/mail_password
+    networks:
+      - credit-bank-network
+
+  gateway:
+    container_name: gateway
+    build:
+      dockerfile: gateway.Dockerfile
+    image: gateway:latest
+    ports:
+      - 8084:8084
+    networks:
+      - credit-bank-network
+
+networks:
+  credit-bank-network:
+    name: resources_backend
+    external: true
+
+secrets:
+  mail_password:
+    environment: mail_password
