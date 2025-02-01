@@ -1,0 +1,32 @@
+name: CreditBank
+
+on:
+  push:
+    branches:
+      - mvp6
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn package
+
+  start:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run docker containers
+    - run: docker compose -f ./deal/src/main/resources/docker-compose.yml up -d
+    - run: docker compose -f ./docker-compose.yml up -d
+    
