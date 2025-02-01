@@ -47,6 +47,8 @@ public class CalculationService {
     private String denyText;
 
     private void denyStatement(Statement statement) {
+        statement.setStatus(ApplicationStatus.CC_DENIED);
+        statement.addStatusHistory();
         EmailMessage emailMessage = new EmailMessage(
                 statement.getClient().getEmail(), Theme.STATEMENT_DENIED, statement.getStatementId(), denyText
         );
@@ -79,9 +81,13 @@ public class CalculationService {
         statementRepository.save(statement);
         log.info("Saved statement {}", statement);
 
-        text = text.replace("{statementId}", statementId);
+        sendEmailMessage(statement);
+    }
+
+    public void sendEmailMessage(Statement statement) {
+        text = text.replace("{statementId}", statement.getStatementId().toString());
         EmailMessage emailMessage = new EmailMessage(
-                client.getEmail(), Theme.CREATE_DOCUMENTS, statement.getStatementId(), text
+                statement.getClient().getEmail(), Theme.CREATE_DOCUMENTS, statement.getStatementId(), text
         );
         dealProducer.sendMessage(createDocumentsTopic, emailMessage);
         log.info("Sent message {}", emailMessage);

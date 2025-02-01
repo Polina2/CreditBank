@@ -32,6 +32,7 @@ public class DealController implements DealApi {
     public void select(LoanOfferDto loanOffer) {
         log.info("/deal/offer/select called with {}", loanOffer);
         selectionService.select(loanOffer);
+        selectionService.sendEmailMessage(loanOffer);
     }
 
     @Override
