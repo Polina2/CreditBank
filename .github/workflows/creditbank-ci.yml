@@ -37,5 +37,3 @@ jobs:
       - run: mvn -B verify -P coverage --no-transfer-progress
 
       - uses: codecov/codecov-action@v4
-        with:
-          name: codecov
