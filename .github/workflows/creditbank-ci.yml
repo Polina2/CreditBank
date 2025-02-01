@@ -27,6 +27,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Run docker containers
-    - run: docker compose -f ./deal/src/main/resources/docker-compose.yml up -d
-    - run: docker compose -f ./docker-compose.yml up -d
-    
+      run: |
+        docker compose -f ./deal/src/main/resources/docker-compose.yml up -d
+        docker compose -f ./docker-compose.yml up -d
