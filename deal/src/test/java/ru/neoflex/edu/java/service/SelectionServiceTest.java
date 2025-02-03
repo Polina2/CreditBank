@@ -11,6 +11,7 @@ import ru.neoflex.edu.java.entity.json.LoanOffer;
 import ru.neoflex.edu.java.repository.JpaStatementRepository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,6 +52,7 @@ class SelectionServiceTest extends IntegrationEnvironment {
     @Test
     void select() {
         Statement statement = new Statement();
+        statement.setStatusHistory(new ArrayList<>());
         statement = statementRepository.save(statement);
         LoanOfferDto expectedLoanOfferDto = getLoanOfferDto().builder().statementId(statement.getStatementId()).build();
 

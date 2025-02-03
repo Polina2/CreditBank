@@ -33,7 +33,10 @@ public class SelectionService {
         statement.setAppliedOffer(mapper.toLoanOffer(request));
         statementRepository.save(statement);
         log.info("Saved statement {}", statement);
+    }
 
+    public void sendEmailMessage(LoanOfferDto request) {
+        Statement statement = statementRepository.findById(request.statementId()).orElseThrow();
         EmailMessage emailMessage = new EmailMessage(
                 statement.getClient().getEmail(), Theme.FINISH_REGISTRATION, statement.getStatementId(), text
         );

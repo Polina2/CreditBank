@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import ru.neoflex.edu.java.client.CalculatorClient;
 import ru.neoflex.edu.java.dto.CreditDto;
 import ru.neoflex.edu.java.dto.FinishRegistrationRequestDto;
@@ -18,17 +19,18 @@ import ru.neoflex.edu.java.repository.JpaClientRepository;
 import ru.neoflex.edu.java.repository.JpaCreditRepository;
 import ru.neoflex.edu.java.repository.JpaStatementRepository;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CalculationServiceTest {
 
     @InjectMocks
+    @Spy
     private CalculationService calculationService;
 
     @Mock
@@ -56,6 +58,7 @@ class CalculationServiceTest {
         request = new FinishRegistrationRequestDto();
         statementId = UUID.randomUUID().toString();
         statement = new Statement();
+        statement.setStatusHistory(new ArrayList<>());
     }
 
     @Test
@@ -75,12 +78,14 @@ class CalculationServiceTest {
         Credit credit = new Credit();
         when(mapper.toCredit(creditDto)).thenReturn(credit);
 
+        doNothing().when(calculationService).sendEmailMessage(any(Statement.class));
+
         calculationService.calculate(request, statementId);
 
         verify(clientRepository).save(client);
         verify(creditRepository).save(credit);
         verify(statementRepository).save(statement);
-        assertEquals(ApplicationStatus.APPROVED, statement.getStatus());
+        assertEquals(ApplicationStatus.CC_APPROVED, statement.getStatus());
         assertEquals(credit, statement.getCredit());
     }
 }
